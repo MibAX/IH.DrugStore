@@ -1,0 +1,62 @@
+﻿@using IH.DrugStore.Web.Models.Drugs
+@model CreateUpdateDrugViewModel
+
+@{
+    ViewData["Title"] = "Create Drug";
+}
+
+<h1>Create Drug</h1>
+<hr />
+
+<form asp-action="Create">
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mt-3">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="BarCode" class="control-label"></label>
+                <input asp-for="BarCode" class="form-control" />
+                <span asp-validation-for="BarCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="DrugTypeId" class="control-label"></label>
+                <select asp-for="DrugTypeId" asp-items="Model.DrugTypeSelectList" class="form-control"></select>
+                <span asp-validation-for="DrugTypeId" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <hr class="mt-5"/>
+    <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+
+    <input type="submit" value="Create" class="btn btn-primary ms-1" />
+
+    <hr />
+
+</form>
+
+<div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

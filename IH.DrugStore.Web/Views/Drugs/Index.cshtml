@@ -1,0 +1,70 @@
+﻿@using IH.DrugStore.Web.Models.Drugs
+@model IEnumerable<DrugListViewModel>
+
+@{
+    ViewData["Title"] = "Drugs";
+}
+
+<h1>Drugs</h1>
+
+<hr />
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New Drug</a>
+</p>
+<hr />
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BarCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DrugTypeName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var drug in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => drug.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => drug.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => drug.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => drug.BarCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => drug.DrugTypeName)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@drug.Id" class="text-decoration-none">
+                        <i class="fa-solid fa-circle-info text-info" title="Details"></i>
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@drug.Id" title="Edit" class="text-decoration-none ms-2">
+                        <i class="fa-solid fa-pencil text-primary"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@drug.Id" title="Delete" class="text-decoration-none ms-2">
+                        <i class="fa-solid fa-trash text-danger"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
