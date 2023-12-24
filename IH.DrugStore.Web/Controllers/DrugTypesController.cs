@@ -128,23 +128,6 @@ namespace IH.DrugStore.Web.Controllers
             return View(drugTypeVM);
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var drugType = await _context.DrugTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (drugType == null)
-            {
-                return NotFound();
-            }
-
-            return View(drugType);
-        }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

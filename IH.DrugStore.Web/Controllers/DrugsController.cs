@@ -83,7 +83,7 @@ namespace IH.DrugStore.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
+
             drugVM.DrugTypeSelectList = new SelectList(_context.DrugTypes, "Id", "Name");
 
             return View(drugVM);
@@ -144,24 +144,6 @@ namespace IH.DrugStore.Web.Controllers
             return View(editVM);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var drug = await _context.Drugs
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (drug == null)
-            {
-                return NotFound();
-            }
-
-            return View(drug);
-        }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -170,9 +152,9 @@ namespace IH.DrugStore.Web.Controllers
             if (drug != null)
             {
                 _context.Drugs.Remove(drug);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

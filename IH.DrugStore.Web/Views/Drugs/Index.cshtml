@@ -60,9 +60,32 @@
                     <a asp-action="Edit" asp-route-id="@drug.Id" title="Edit" class="text-decoration-none ms-2">
                         <i class="fa-solid fa-pencil text-primary"></i>
                     </a>
-                    <a asp-action="Delete" asp-route-id="@drug.Id" title="Delete" class="text-decoration-none ms-2">
+                    <a data-bs-toggle="modal" data-bs-target="#deleteModal_@drug.Id" title="Delete" class="text-decoration-none ms-2">
                         <i class="fa-solid fa-trash text-danger"></i>
                     </a>
+
+                     <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal_@drug.Id" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Drug</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h3>Are you sure you want to delete <span class="text-danger">@drug.Name</span></h3>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                    <form asp-action="delete" asp-route-id="@drug.Id">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }
