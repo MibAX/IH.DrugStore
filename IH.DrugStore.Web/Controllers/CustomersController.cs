@@ -144,28 +144,6 @@ namespace IH.DrugStore.Web.Controllers
             return View(customerVM);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context
-                                    .Customers
-                                    .Where(customer => customer.Id == id)
-                                    .SingleOrDefaultAsync();
-
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            var customerVM = _mapper.Map<Customer, CustomerDetailsViewModel>(customer);
-
-            return View(customerVM);
-        }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
