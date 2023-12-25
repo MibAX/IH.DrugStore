@@ -5,6 +5,7 @@ using IH.DrugStore.Web.Data.Entities;
 using AutoMapper;
 using IH.DrugStore.Web.Models.Drugs;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IH.DrugStore.Web.Controllers
 {
@@ -63,6 +64,7 @@ namespace IH.DrugStore.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Create()
         {
             var createVM = new CreateUpdateDrugViewModel();
@@ -73,6 +75,7 @@ namespace IH.DrugStore.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(CreateUpdateDrugViewModel drugVM)
         {
             if (ModelState.IsValid)
@@ -90,6 +93,7 @@ namespace IH.DrugStore.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -111,6 +115,7 @@ namespace IH.DrugStore.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, CreateUpdateDrugViewModel editVM)
         {
             if (id != editVM.Id)
@@ -146,6 +151,7 @@ namespace IH.DrugStore.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var drug = await _context.Drugs.FindAsync(id);

@@ -4,9 +4,11 @@ using IH.DrugStore.Web.Data;
 using IH.DrugStore.Web.Data.Entities;
 using AutoMapper;
 using IH.DrugStore.Web.Models.Customers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IH.DrugStore.Web.Controllers
 {
+    [Authorize]
     public class CustomersController : Controller
     {
         #region Data and Constructor

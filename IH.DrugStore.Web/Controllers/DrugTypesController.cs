@@ -4,9 +4,11 @@ using IH.DrugStore.Web.Data;
 using IH.DrugStore.Web.Data.Entities;
 using AutoMapper;
 using IH.DrugStore.Web.Models.DrugTypes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IH.DrugStore.Web.Controllers
 {
+    [Authorize]
     public class DrugTypesController : Controller
     {
         #region Data and Constructor
@@ -23,6 +25,8 @@ namespace IH.DrugStore.Web.Controllers
         #endregion
 
         #region Actions
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var drugTypes = await _context
