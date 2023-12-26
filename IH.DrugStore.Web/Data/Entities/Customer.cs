@@ -12,6 +12,9 @@ namespace IH.DrugStore.Web.Data.Entities
         public Gender Gender { get; set; }
 
 
+        public List<Order> Orders { get; set; }
+
+
         public string FullName
         {
             get

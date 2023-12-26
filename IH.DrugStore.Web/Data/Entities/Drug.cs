@@ -9,5 +9,7 @@
 
         public int DrugTypeId { get; set; }
         public DrugType DrugType { get; set; }
+
+        public List<Order> Orders { get; set; }
     }
 }

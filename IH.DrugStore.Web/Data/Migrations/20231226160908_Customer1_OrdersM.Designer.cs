@@ -4,6 +4,7 @@ using IH.DrugStore.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IH.DrugStore.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231226160908_Customer1_OrdersM")]
+    partial class Customer1_OrdersM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace IH.DrugStore.Web.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("DrugOrder", b =>
-                {
-                    b.Property<int>("DrugsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DrugsId", "OrdersId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("DrugOrder");
-                });
 
             modelBuilder.Entity("IH.DrugStore.Web.Data.Entities.Customer", b =>
                 {
@@ -339,21 +327,6 @@ namespace IH.DrugStore.Web.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("DrugOrder", b =>
-                {
-                    b.HasOne("IH.DrugStore.Web.Data.Entities.Drug", null)
-                        .WithMany()
-                        .HasForeignKey("DrugsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IH.DrugStore.Web.Data.Entities.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("IH.DrugStore.Web.Data.Entities.Drug", b =>
