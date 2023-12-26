@@ -9,6 +9,7 @@ namespace IH.DrugStore.Web.Data
         public DbSet<Drug> Drugs { get; set; }
         public DbSet<DrugType> DrugTypes { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
