@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using IH.DrugStore.Web.Data;
-using IH.DrugStore.Web.Data.Entities;
+using IH.DrugStore.Web.Models.Orders;
+using AutoMapper;
 
 namespace IH.DrugStore.Web.Controllers
 {
@@ -11,10 +12,12 @@ namespace IH.DrugStore.Web.Controllers
         #region Data and Constructor
 
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         #endregion
@@ -47,22 +50,26 @@ namespace IH.DrugStore.Web.Controllers
 
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id");
-            return View();
+            var createUpdateOrderVM = new CreateUpdateOrderViewModel();
+            createUpdateOrderVM.Customer = new SelectList(_context.Customers, "Id", "FullName");
+
+            return View(createUpdateOrderVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OrderTime,TotalPrice,PaymentMethod,CustomerId")] Order order)
+        public async Task<IActionResult> Create(CreateUpdateOrderViewModel orderVM)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                _context.Add(orderVM);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            return View(order);
+            
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", orderVM.CustomerId);
+
+            return View(orderVM);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -83,9 +90,9 @@ namespace IH.DrugStore.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OrderTime,TotalPrice,PaymentMethod,CustomerId")] Order order)
+        public async Task<IActionResult> Edit(int id, CreateUpdateOrderViewModel orderVM)
         {
-            if (id != order.Id)
+            if (id != orderVM.Id)
             {
                 return NotFound();
             }
@@ -94,12 +101,12 @@ namespace IH.DrugStore.Web.Controllers
             {
                 try
                 {
-                    _context.Update(order);
+                    _context.Update(orderVM);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.Id))
+                    if (!OrderExists(orderVM.Id))
                     {
                         return NotFound();
                     }
@@ -110,8 +117,8 @@ namespace IH.DrugStore.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            return View(order);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", orderVM.CustomerId);
+            return View(orderVM);
         }
 
         public async Task<IActionResult> Delete(int? id)

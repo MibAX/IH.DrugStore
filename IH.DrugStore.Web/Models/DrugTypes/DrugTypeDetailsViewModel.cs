@@ -7,6 +7,6 @@ namespace IH.DrugStore.Web.Models.DrugTypes
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<DrugListViewModel> Drugs { get; set; }
+        public List<DrugViewModel> Drugs { get; set; }
     }
 }

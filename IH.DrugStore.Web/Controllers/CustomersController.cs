@@ -33,7 +33,7 @@ namespace IH.DrugStore.Web.Controllers
                                     .OrderBy(customer => customer.FirstName)
                                     .ToListAsync();
 
-            var customerVMs = _mapper.Map<List<Customer>, List<CustomerListViewModel>>(customers);
+            var customerVMs = _mapper.Map<List<Customer>, List<CustomeViewModel>>(customers);
 
             return View(customerVMs);
         }

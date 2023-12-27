@@ -1,47 +1,40 @@
-﻿@model IH.DrugStore.Web.Data.Entities.Order
+﻿@using IH.DrugStore.Web.Enums
+@using IH.DrugStore.Web.Models.Orders
+@model CreateUpdateOrderViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Order";
 }
 
-<h1>Create</h1>
-
-<h4>Order</h4>
+<h1>Create Order</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="OrderTime" class="control-label"></label>
-                <input asp-for="OrderTime" class="form-control" />
-                <span asp-validation-for="OrderTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalPrice" class="control-label"></label>
-                <input asp-for="TotalPrice" class="form-control" />
-                <span asp-validation-for="TotalPrice" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="PaymentMethod" class="control-label"></label>
-                <select asp-for="PaymentMethod" class="form-control"></select>
+                <select asp-for="PaymentMethod" asp-items="@Html.GetEnumSelectList<PaymentMethod>()" class="form-control"></select>
                 <span asp-validation-for="PaymentMethod" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+                <select asp-for="CustomerId" class="form-control" asp-items="@Model.Customer"></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            @* TODO Add select Multiple drugs *@
+
+            <div class="mt-4">
+                <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+                <input type="submit" value="Create" class="btn btn-primary ms-1" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

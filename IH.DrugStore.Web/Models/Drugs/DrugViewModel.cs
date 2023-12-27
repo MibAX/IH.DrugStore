@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IH.DrugStore.Web.Models.Drugs
 {
-    public class DrugListViewModel
+    public class DrugViewModel
     {
         public int Id { get; set; }
 

@@ -34,7 +34,7 @@ namespace IH.DrugStore.Web.Controllers
                                     .Include(drug => drug.DrugType)
                                     .ToListAsync();
 
-            var drugVMs = _mapper.Map<List<Drug>, List<DrugListViewModel>>(drugs);
+            var drugVMs = _mapper.Map<List<Drug>, List<DrugViewModel>>(drugs);
 
             return View(drugVMs);
         }

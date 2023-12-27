@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IH.DrugStore.Web.Models.Customers
 {
-    public class CustomerListViewModel
+    public class CustomeViewModel
     {
         public int Id { get; set; }
 

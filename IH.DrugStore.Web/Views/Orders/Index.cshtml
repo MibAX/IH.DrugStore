@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<IH.DrugStore.Web.Data.Entities.Order>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Orders";
 }
 
-<h1>Index</h1>
-
+<h1>Orders</h1>
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New Order</a>
 </p>
-<table class="table">
+<table class="table data-tables">
     <thead>
         <tr>
             <th>
@@ -28,25 +28,59 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var order in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderTime)
+                @Html.DisplayFor(modelItem => order.OrderTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
+                @Html.DisplayFor(modelItem => order.TotalPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
+                @Html.DisplayFor(modelItem => order.PaymentMethod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Customer.Id)
+                @Html.DisplayFor(modelItem => order.Customer.Id)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@order.Id" class="text-decoration-none">
+                        <i class="fa-solid fa-circle-info text-info" title="Details"></i>
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@order.Id" title="Edit" class="text-decoration-none ms-2">
+                        <i class="fa-solid fa-pencil text-primary"></i>
+                    </a>
+                    <a data-bs-toggle="modal" data-bs-target="#deleteModal_@order.Id" title="Delete" class="text-decoration-none ms-2">
+                        <i class="fa-solid fa-trash text-danger"></i>
+                    </a>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal_@order.Id" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Order</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h3>
+                                        Are you sure you want to delete order 
+                                        #<span class="text-danger">@order.Id</span>
+                                        - @order.OrderTime
+                                        ?
+                                    </h3>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                    <form asp-action="delete" asp-route-id="@order.Id">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
         </tr>
 }
     </tbody>
