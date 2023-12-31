@@ -14,7 +14,6 @@ namespace IH.DrugStore.Web.Data.Entities
         public Customer Customer { get; set; }
 
 
-        public List<Drug> Drugs { get; set; }
-
+        public List<Drug> Drugs { get; set; } = new List<Drug>();
     }
 }

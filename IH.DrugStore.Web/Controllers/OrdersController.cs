@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using IH.DrugStore.Web.Data;
 using IH.DrugStore.Web.Models.Orders;
 using AutoMapper;
+using IH.DrugStore.Web.Data.Entities;
 
 namespace IH.DrugStore.Web.Controllers
 {
@@ -51,7 +52,9 @@ namespace IH.DrugStore.Web.Controllers
         public IActionResult Create()
         {
             var createUpdateOrderVM = new CreateUpdateOrderViewModel();
-            createUpdateOrderVM.Customer = new SelectList(_context.Customers, "Id", "FullName");
+            createUpdateOrderVM.CustomerSelectList = new SelectList(_context.Customers, "Id", "FullName");
+
+            createUpdateOrderVM.DrugMultiSelectList = new MultiSelectList(_context.Drugs, "Id", "Name");
 
             return View(createUpdateOrderVM);
         }
@@ -62,14 +65,32 @@ namespace IH.DrugStore.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orderVM);
+                var order = _mapper.Map<CreateUpdateOrderViewModel, Order>(orderVM);
+
+                order.OrderTime = DateTime.Now;
+
+                await UpdateOrderDrugsAsync(order, orderVM.DrugIds);
+
+
+
+                order.TotalPrice = order.Drugs.Sum(drug => drug.Price);
+                // example:
+                // 1: Amoclan 625MG, price 12
+                // 4: Effexor XR 150MG, price: 14
+                // order.TotalPrice = 26
+
+
+                _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", orderVM.CustomerId);
+            else
+            {
+                orderVM.CustomerSelectList = new SelectList(_context.Customers, "Id", "FullName", orderVM.CustomerId);
+                orderVM.DrugMultiSelectList = new MultiSelectList(_context.Drugs, "Id", "Name", orderVM.DrugIds);
 
-            return View(orderVM);
+                return View(orderVM);
+            }
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -160,6 +181,16 @@ namespace IH.DrugStore.Web.Controllers
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.Id == id);
+        }
+
+        private async Task UpdateOrderDrugsAsync(Order order, List<int> drugIds) // [1, 4]
+        {
+            var drugsFromDb = await _context
+                            .Drugs // [1, 2, 3, 4]
+                            .Where(drug => drugIds.Contains(drug.Id))
+                            .ToListAsync();
+
+            order.Drugs.AddRange(drugsFromDb);
         }
 
         #endregion

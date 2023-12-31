@@ -20,10 +20,13 @@
             </div>
             <div class="form-group mt-3">
                 <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class="form-control" asp-items="@Model.Customer"></select>
+                <select asp-for="CustomerId" class="form-control" asp-items="@Model.CustomerSelectList"></select>
             </div>
 
-            @* TODO Add select Multiple drugs *@
+            <div class="form-group mt-3">
+                <label asp-for="DrugIds" class="control-label"></label>
+                <select asp-for="DrugIds" class="form-control" asp-items="@Model.DrugMultiSelectList"></select>
+            </div>
 
             <div class="mt-4">
                 <a class="btn btn-secondary" asp-action="Index">Cancel</a>

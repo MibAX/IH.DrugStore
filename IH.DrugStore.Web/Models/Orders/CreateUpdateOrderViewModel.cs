@@ -13,16 +13,18 @@ namespace IH.DrugStore.Web.Models.Orders
         public PaymentMethod PaymentMethod { get; set; }
 
 
+        [ValidateNever]
+        public SelectList CustomerSelectList { get; set; }
+
         [Display(Name = "Customer")]
         public int CustomerId { get; set; }
-
-        public List<int> DrugIds { get; set; }
-
-
 
 
 
         [ValidateNever]
-        public SelectList Customer { get; set; }
+        public MultiSelectList DrugMultiSelectList { get; set; }
+
+        [Display(Name = "Drugs")]
+        public List<int> DrugIds { get; set; }
     }
 }
