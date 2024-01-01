@@ -25,6 +25,6 @@ namespace IH.DrugStore.Web.Models.Orders
         public MultiSelectList DrugMultiSelectList { get; set; }
 
         [Display(Name = "Drugs")]
-        public List<int> DrugIds { get; set; }
+        public List<int> DrugIds { get; set; } = new List<int>();
     }
 }

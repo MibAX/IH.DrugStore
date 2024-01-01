@@ -72,7 +72,6 @@ namespace IH.DrugStore.Web.Controllers
                 await UpdateOrderDrugsAsync(order, orderVM.DrugIds);
 
 
-
                 order.TotalPrice = order.Drugs.Sum(drug => drug.Price);
                 // example:
                 // 1: Amoclan 625MG, price 12
@@ -100,13 +99,36 @@ namespace IH.DrugStore.Web.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context
+                                .Orders
+                                .Include(order => order.Drugs)
+                                .Where(order => order.Id == id)
+                                .SingleOrDefaultAsync();
+
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            return View(order);
+
+            var createUpdateOrderVM = _mapper.Map<Order, CreateUpdateOrderViewModel>(order);
+
+            createUpdateOrderVM.CustomerSelectList = new SelectList(_context.Customers, "Id", "FullName");
+            createUpdateOrderVM.DrugMultiSelectList = new MultiSelectList(_context.Drugs, "Id", "Name");
+
+
+
+
+            createUpdateOrderVM.DrugIds = order.Drugs.Select(drug => drug.Id).ToList();
+            // Those two do the same thing, the above one is newer and better
+            //foreach(var drug in order.Drugs)
+            //{
+            //    createUpdateOrderVM.DrugIds.Add(drug.Id);
+            //}
+
+
+
+
+            return View(createUpdateOrderVM);
         }
 
         [HttpPost]
@@ -122,7 +144,9 @@ namespace IH.DrugStore.Web.Controllers
             {
                 try
                 {
-                    _context.Update(orderVM);
+                    var order = _mapper.Map<CreateUpdateOrderViewModel, Order>(orderVM);
+
+                    _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -136,6 +160,7 @@ namespace IH.DrugStore.Web.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", orderVM.CustomerId);
@@ -187,7 +212,7 @@ namespace IH.DrugStore.Web.Controllers
         {
             var drugsFromDb = await _context
                             .Drugs // [1, 2, 3, 4]
-                            .Where(drug => drugIds.Contains(drug.Id))
+                            .Where(drug => drugIds.Contains(drug.Id)) // [1, 4] Cross [1, 2, 3, 4]
                             .ToListAsync();
 
             order.Drugs.AddRange(drugsFromDb);
