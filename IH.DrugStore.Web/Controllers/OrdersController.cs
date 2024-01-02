@@ -144,7 +144,20 @@ namespace IH.DrugStore.Web.Controllers
             {
                 try
                 {
-                    var order = _mapper.Map<CreateUpdateOrderViewModel, Order>(orderVM);
+                    // TO DO get the order including drugs form the DATABASE first 
+                    // THEN patch it using AutoMapper
+                    var order = await GetOrderIncludingDrugs(id);
+
+                    if (order == null)
+                    {
+                        return NotFound();
+                    }
+                    // This is Map the third Overload:
+                    // Copies data from first param to the second param
+                    // i.e.: Patch from source to destination
+                    _mapper.Map<CreateUpdateOrderViewModel, Order>(orderVM, order);
+
+                    await UpdateOrderDrugsAsync(order, orderVM.DrugIds);
 
                     _context.Update(order);
                     await _context.SaveChangesAsync();
@@ -210,12 +223,26 @@ namespace IH.DrugStore.Web.Controllers
 
         private async Task UpdateOrderDrugsAsync(Order order, List<int> drugIds) // [1, 4]
         {
+            // 1 - Get Drugs from the DB using drugIds
             var drugsFromDb = await _context
                             .Drugs // [1, 2, 3, 4]
                             .Where(drug => drugIds.Contains(drug.Id)) // [1, 4] Cross [1, 2, 3, 4]
                             .ToListAsync();
 
+            // 2 - Clear the Drugs from the Order
+            order.Drugs.Clear();
+
+            // 3 - Add new drugs to the order
             order.Drugs.AddRange(drugsFromDb);
+        }
+
+        private async Task<Order?> GetOrderIncludingDrugs(int id)
+        {
+            return await _context
+                            .Orders
+                            .Include(order => order.Drugs)
+                            .Where(order => order.Id == id)
+                            .SingleOrDefaultAsync();
         }
 
         #endregion
