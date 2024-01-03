@@ -71,12 +71,7 @@ namespace IH.DrugStore.Web.Controllers
 
                 await UpdateOrderDrugsAsync(order, orderVM.DrugIds);
 
-
-                order.TotalPrice = order.Drugs.Sum(drug => drug.Price);
-                // example:
-                // 1: Amoclan 625MG, price 12
-                // 4: Effexor XR 150MG, price: 14
-                // order.TotalPrice = 26
+                order.TotalPrice = GetTotalPrice(order.Drugs);
 
 
                 _context.Add(order);
@@ -159,6 +154,8 @@ namespace IH.DrugStore.Web.Controllers
 
                     await UpdateOrderDrugsAsync(order, orderVM.DrugIds);
 
+                    order.TotalPrice = GetTotalPrice(order.Drugs);
+
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
@@ -176,8 +173,12 @@ namespace IH.DrugStore.Web.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", orderVM.CustomerId);
-            return View(orderVM);
+            else
+            {
+
+                ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", orderVM.CustomerId);
+                return View(orderVM);
+            }
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -243,6 +244,11 @@ namespace IH.DrugStore.Web.Controllers
                             .Include(order => order.Drugs)
                             .Where(order => order.Id == id)
                             .SingleOrDefaultAsync();
+        }
+
+        private double GetTotalPrice(List<Drug> drugs)
+        {
+            return drugs.Sum(drug => drug.Price);
         }
 
         #endregion
