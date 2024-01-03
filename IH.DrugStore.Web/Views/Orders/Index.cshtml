@@ -1,4 +1,5 @@
-﻿@model IEnumerable<IH.DrugStore.Web.Data.Entities.Order>
+﻿@using IH.DrugStore.Web.Models.Orders
+@model IEnumerable<OrderViewModel>
 
 @{
     ViewData["Title"] = "Orders";
@@ -13,6 +14,9 @@
     <thead>
         <tr>
             <th>
+            @Html.DisplayNameFor(model => model.CustomerFullName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.OrderTime)
             </th>
             <th>
@@ -21,27 +25,25 @@
             <th>
                 @Html.DisplayNameFor(model => model.PaymentMethod)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var order in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => order.OrderTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => order.TotalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => order.PaymentMethod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => order.Customer.Id)
-            </td>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => order.CustomerFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.OrderTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.TotalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.PaymentMethod)
+                </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@order.Id" class="text-decoration-none">
                         <i class="fa-solid fa-circle-info text-info" title="Details"></i>
@@ -63,7 +65,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <h3>
-                                        Are you sure you want to delete order 
+                                        Are you sure you want to delete order
                                         #<span class="text-danger">@order.Id</span>
                                         - @order.OrderTime
                                         ?
@@ -81,7 +83,7 @@
                         </div>
                     </div>
                 </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>

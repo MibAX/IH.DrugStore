@@ -27,8 +27,14 @@ namespace IH.DrugStore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Orders.Include(o => o.Customer);
-            return View(await applicationDbContext.ToListAsync());
+            var orders = await _context
+                            .Orders
+                            .Include(order => order.Customer)
+                            .ToListAsync();
+
+            var orderVMs = _mapper.Map<List<Order>, List<OrderViewModel>>(orders);
+
+            return View(orderVMs);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -139,7 +145,7 @@ namespace IH.DrugStore.Web.Controllers
             {
                 try
                 {
-                    // TO DO get the order including drugs form the DATABASE first 
+                    // Get the order including drugs form the DATABASE first 
                     // THEN patch it using AutoMapper
                     var order = await GetOrderIncludingDrugs(id);
 
@@ -147,6 +153,7 @@ namespace IH.DrugStore.Web.Controllers
                     {
                         return NotFound();
                     }
+
                     // This is Map the third Overload:
                     // Copies data from first param to the second param
                     // i.e.: Patch from source to destination
