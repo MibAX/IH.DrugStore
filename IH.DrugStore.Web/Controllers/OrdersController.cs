@@ -27,12 +27,7 @@ namespace IH.DrugStore.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var orders = await _context
-                            .Orders
-                            .Include(order => order.Customer)
-                            .ToListAsync();
-
-            var orderVMs = _mapper.Map<List<Order>, List<OrderViewModel>>(orders);
+            var orderVMs = await GetOrderVMs();
 
             return View(orderVMs);
         }
@@ -223,6 +218,18 @@ namespace IH.DrugStore.Web.Controllers
         #endregion
 
         #region Private Methods
+
+        private async Task<List<OrderViewModel>> GetOrderVMs()
+        {
+            var orders = await _context
+                                        .Orders
+                                        .Include(order => order.Customer)
+                                        .ToListAsync();
+
+            var orderVMs = _mapper.Map<List<Order>, List<OrderViewModel>>(orders);
+            return orderVMs;
+        }
+
 
         private bool OrderExists(int id)
         {
